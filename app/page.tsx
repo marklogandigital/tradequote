@@ -4,10 +4,13 @@ export default function Home() {
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6">
-            Professional quotes in
-            <span className="block text-blue-600">minutes, not hours</span>
-          </h1>
+          <div className="flex justify-center mb-8">
+            <img src="/tradequote-logo.png" alt="TradeQuote" className="h-32 w-auto" />
+          </div>
+<h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6">
+  Professional quotes in
+  <span className="block text-blue-600">minutes, not hours</span>
+</h1>
           <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
             The simple quoting tool built for tradespeople. Create accurate quotes, 
             save your materials library, and never lose track of a job again.
