@@ -38,18 +38,12 @@ export default function Login() {
     }
   }
 
-  return (
+ return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       {/* Logo/Brand */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <a href="/" className="flex justify-center">
-          <div className="flex justify-center mb-8">
-            <img src="/tradequote-logo.png" alt="TradeQuote" className="h-32 w-auto"  />
-          </div>
-<h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6">
-  Professional quotes in
-  <span className="block text-blue-600">minutes, not hours</span>
-</h1>
+          <h1 className="text-3xl font-bold text-slate-900">TradeQuote</h1>
         </a>
         <h2 className="mt-6 text-center text-3xl font-bold text-slate-900">
           Welcome back
