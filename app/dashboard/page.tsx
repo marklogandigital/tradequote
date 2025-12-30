@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
@@ -13,34 +12,14 @@ interface Quote {
   created_at: string
 }
 
-export default function DashboardPage() {
-  const router = useRouter()
+export default function Dashboard() {
   const [quotes, setQuotes] = useState<Quote[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
-    checkAuth()
+    fetchQuotes()
   }, [])
-
-  const checkAuth = async () => {
-    try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      if (!session) {
-        router.push('/login')
-        return
-      }
-
-      setIsCheckingAuth(false)
-      fetchQuotes()
-    } catch (error) {
-      console.error('Error checking auth:', error)
-      router.push('/login')
-    }
-  }
 
   const fetchQuotes = async () => {
     try {
@@ -90,123 +69,133 @@ export default function DashboardPage() {
     return new Intl.NumberFormat('en-GB', {
       style: 'currency',
       currency: 'GBP',
-      minimumFractionDigits: 2,
     }).format(amount)
   }
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return new Intl.DateTimeFormat('en-GB', {
+    return new Date(dateString).toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
-    }).format(date)
-  }
-
-  if (isCheckingAuth) {
-    return (
-      <main className="min-h-screen bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <p className="text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </main>
-    )
+    })
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
-              Quotes
-            </h1>
-            <p className="text-gray-600">View and manage all your quotes</p>
-          </div>
-          <div className="mt-6 md:mt-0 flex gap-4">
-            <Link
-              href="/quote"
-              className="inline-block px-8 py-4 bg-gray-900 text-white text-lg font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200 shadow-sm"
-            >
-              New Quote
-            </Link>
+    <div className="min-h-screen bg-slate-50">
+      {/* Navigation Bar */}
+      <nav className="bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-8">
+              <h1 className="text-xl font-bold text-slate-900">TradeQuote</h1>
+              <a
+                href="/dashboard"
+                className="text-slate-900 font-medium hover:text-blue-600 transition-colors"
+              >
+                Dashboard
+              </a>
+              <a
+                href="/materials"
+                className="text-slate-600 hover:text-blue-600 transition-colors"
+              >
+                Materials Library
+              </a>
+            </div>
             <button
               onClick={handleSignOut}
-              className="inline-block px-6 py-4 bg-white text-gray-900 text-base font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors duration-200 shadow-sm"
+              className="text-slate-600 hover:text-slate-900 font-medium transition-colors"
             >
               Sign Out
             </button>
           </div>
         </div>
+      </nav>
 
-        {isLoading ? (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <p className="text-gray-600">Loading quotes...</p>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-900">Your Quotes</h2>
+            <p className="text-slate-600 mt-1">
+              Manage and track all your quotes
+            </p>
           </div>
-        ) : quotes.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <div className="max-w-md mx-auto">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400 mb-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
+          <a
+            href="/quote"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg flex items-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            New Quote
+          </a>
+        </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <p className="text-slate-600 mt-4">Loading quotes...</p>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && quotes.length === 0 && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No quotes yet
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Get started by creating your first quote.
-              </p>
-              <Link
-                href="/quote"
-                className="inline-block px-6 py-3 bg-gray-900 text-white text-base font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200 shadow-sm"
-              >
-                Create a quote
-              </Link>
             </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">No quotes yet</h3>
+            <p className="text-slate-600 mb-6">
+              Get started by creating your first quote
+            </p>
+            <a
+              href="/quote"
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Create Your First Quote
+            </a>
           </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            <div className="divide-y divide-gray-200">
-              {quotes.map((quote) => (
-                <Link
-                  key={quote.id}
-                  href={`/quote/${quote.id}`}
-                  className="block p-6 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
-                >
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                        {quote.job_name}
-                      </h3>
-                      <p className="text-gray-600 mb-2">{quote.client_name}</p>
-                      <p className="text-sm text-gray-500">
-                        {formatDate(quote.created_at)}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-gray-900">
-                        {formatCurrency(quote.total_cost)}
-                      </p>
-                    </div>
+        )}
+
+        {/* Quotes Grid */}
+        {!isLoading && quotes.length > 0 && (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {quotes.map((quote) => (
+              <a
+                key={quote.id}
+                href={`/quote/${quote.id}`}
+                className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md hover:border-blue-200 transition-all group"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      {quote.client_name}
+                    </h3>
+                    <p className="text-sm text-slate-600 mt-1">{quote.job_name}</p>
                   </div>
-                </Link>
-              ))}
-            </div>
+                  <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <div className="pt-3 border-t border-slate-100">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-slate-500">
+                      {formatDate(quote.created_at)}
+                    </span>
+                    <span className="text-lg font-bold text-blue-600">
+                      {formatCurrency(quote.total_cost)}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            ))}
           </div>
         )}
       </div>
-    </main>
+    </div>
   )
 }
-
