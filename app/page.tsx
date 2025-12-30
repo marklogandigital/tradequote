@@ -45,7 +45,9 @@ export default function SignUp() {
       {/* Logo/Brand */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <a href="/" className="flex justify-center">
-          <h1 className="text-3xl font-bold text-slate-900">TradeQuote</h1>
+          <div className="flex items-center justify-center mb-8">
+            <img src="/tradequote-logo.png" alt="TradeQuote" className="h-20 w-auto" />
+          </div>
         </a>
         <h2 className="mt-6 text-center text-3xl font-bold text-slate-900">
           Create your account
