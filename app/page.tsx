@@ -1,165 +1,141 @@
-'use client'
-
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-
-export default function SignUp() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
-
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      })
-
-      if (error) {
-        setError(error.message)
-        setIsLoading(false)
-        return
-      }
-
-      if (data.user) {
-        // Show success message
-        alert('Account created! Please check your email to confirm your account.')
-        router.push('/login')
-      }
-    } catch (error) {
-      console.error('Error signing up:', error)
-      setError('An unexpected error occurred. Please try again.')
-      setIsLoading(false)
-    }
-  }
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      {/* Logo/Brand */}
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <a href="/" className="flex justify-center">
-          <h1 className="text-3xl font-bold text-slate-900">TradeQuote</h1>
-        </a>
-        <h2 className="mt-6 text-center text-3xl font-bold text-slate-900">
-          Create your account
-        </h2>
-        <p className="mt-2 text-center text-sm text-slate-600">
-          Start creating professional quotes in minutes
-        </p>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+        <div className="text-center">
+          <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6">
+            Professional quotes in
+            <span className="block text-blue-600">minutes, not hours</span>
+          </h1>
+          <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+            The simple quoting tool built for tradespeople. Create accurate quotes, 
+            save your materials library, and never lose track of a job again.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <a
+              href="/signup"
+              className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+            >
+              Get Started Free
+            </a>
+            <a
+              href="/login"
+              className="bg-white text-slate-900 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-slate-50 transition-colors border-2 border-slate-200"
+            >
+              Sign In
+            </a>
+          </div>
+          <p className="text-sm text-slate-500 mt-4">No credit card required</p>
+        </div>
       </div>
 
-      {/* Form */}
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-lg sm:rounded-xl sm:px-10 border border-slate-200">
-          <form onSubmit={handleSignUp} className="space-y-6">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-slate-700 mb-2"
-              >
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none block w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-slate-900"
-                placeholder="you@example.com"
-              />
+      {/* Features Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
             </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-slate-700 mb-2"
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none block w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-slate-900"
-                placeholder="••••••••"
-              />
-              <p className="mt-2 text-xs text-slate-500">
-                Must be at least 6 characters long
-              </p>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Creating account...
-                  </div>
-                ) : (
-                  'Create account'
-                )}
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-500 text-center">
-              By signing up, you agree to our Terms of Service and Privacy Policy
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Lightning Fast Quotes</h3>
+            <p className="text-slate-600">
+              Create professional quotes in minutes. Add labour, materials, and calculations 
+              are done automatically.
             </p>
-          </form>
+          </div>
 
-          {/* Divider */}
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-slate-500">
-                  Already have an account?
-                </span>
-              </div>
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
             </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Your Materials Library</h3>
+            <p className="text-slate-600">
+              Save your frequently used materials with pricing. Never type the same 
+              item twice.
+            </p>
+          </div>
 
-            <div className="mt-6">
-              <a
-                href="/login"
-                className="w-full flex justify-center py-3 px-4 border-2 border-slate-200 rounded-lg shadow-sm text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              >
-                Sign in instead
-              </a>
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Always Accessible</h3>
+            <p className="text-slate-600">
+              Access your quotes from any device. All your data is securely stored 
+              in the cloud.
+            </p>
           </div>
         </div>
+      </div>
 
-        {/* Back to home */}
-        <p className="mt-6 text-center text-sm text-slate-600">
-          <a href="/" className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
-            ← Back to home
+      {/* How It Works Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 className="text-3xl font-bold text-slate-900 text-center mb-12">
+          How It Works
+        </h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              1
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Add Your Materials</h3>
+            <p className="text-slate-600">
+              Build your personal library of materials and pricing
+            </p>
+          </div>
+
+          <div className="text-center">
+            <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              2
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Create Quotes</h3>
+            <p className="text-slate-600">
+              Select materials, add labour, and let the app calculate totals
+            </p>
+          </div>
+
+          <div className="text-center">
+            <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              3
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Send to Clients</h3>
+            <p className="text-slate-600">
+              Share professional quotes and keep track of all your jobs
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Final CTA */}
+      <div className="bg-blue-600 text-white py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Start quoting smarter today
+          </h2>
+          <p className="text-blue-100 text-lg mb-8">
+            Join tradespeople who are saving time and looking more professional
+          </p>
+          <a
+            href="/signup"
+            className="inline-block bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-slate-50 transition-colors shadow-lg"
+          >
+            Create Your Free Account
           </a>
-        </p>
+          <p className="text-blue-100 text-sm mt-4">No credit card required</p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="bg-slate-900 text-slate-400 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p>© 2025 TradeQuote. Built for tradespeople.</p>
+        </div>
       </div>
     </div>
   )
